@@ -23,8 +23,8 @@ exports.signup = function (req, res) {
 
         if (!req.body.nickname) {
             workflow.outcome.errfor.nickname = '昵称必须填写';
-        } else if (req.body.nickname.length > 8) {
-            workflow.outcome.errfor.nickname = '昵称长度不得超过 8 位';
+        } else if (req.body.nickname.length > 16) {
+            workflow.outcome.errfor.nickname = '昵称长度不得超过 16 位';
         }
 
         if (!req.body.email) {
