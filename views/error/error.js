@@ -1,26 +1,21 @@
 'use strict';
 
 exports.http404 = function (req, res) {
+    var workflow = req.app.utility.workflow(req, res);
+    workflow.outcome.errors.push('你请求的资源没有找到。');
     res.status(404);
-    if (req.xhr) {
-        res.send({error: 'Resource not found.'});
-    }
+    return workflow.emit('response');
 };
 
 exports.http500 = function (err, req, res, next) {
-    res.status(500);
+    var workflow = req.app.utility.workflow(req, res);
 
-    var data = {
-        err: {},
-        isOutputError: false
-    };
     if (req.app.get('env') === 'development') {
-        data.err = err;
-        data.isOutputError = true;
+        workflow.outcome.errors.push(err);
         console.log(err.stack);
+    } else {
+        workflow.outcome.errors.push('服务器发生了一些内部错误。');
     }
-
-    if (req.xhr) {
-        res.send({error: 'Something went wrong.', details: data});
-    }
+    res.status(500);
+    return workflow.emit('response');
 };

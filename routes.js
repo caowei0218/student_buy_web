@@ -6,11 +6,12 @@ function ensureAuthenticated(req, res, next) {
     }
     res.set('X-Auth-Required', 'true');
     req.session.returnUrl = req.originalUrl;
-    res.send({
-        code: 'NOT_LOGIN',
-        message: '没有登录。'
-    });
-    //res.redirect('/');
+    var error = {
+        success: false,
+        errors: ['该用户没有登录。'],
+        errfor: {}
+    };
+    res.send(error);
 }
 
 function ensureAdmin(req, res, next) {
@@ -18,11 +19,12 @@ function ensureAdmin(req, res, next) {
         return next();
     }
 
-    res.send({
-        code: 'NOT_LOGIN',
-        message: '没有登录。'
-    });
-    //res.redirect('/');
+    var error = {
+        success: false,
+        errors: ['该用户没有登录。'],
+        errfor: {}
+    };
+    res.send(error);
 }
 
 function ensureAccount(req, res, next) {
@@ -34,16 +36,25 @@ function ensureAccount(req, res, next) {
         }
         return next();
     }
-    res.redirect('/');
+    var error = {
+        success: false,
+        errors: ['该用户没有登录。'],
+        errfor: {}
+    };
+    res.send(error);
 }
 
 module.exports = function (app, passport) {
 
     app.get('/checklogin/', function (req, res) {
         if (req.isAuthenticated() && req.user.canPlayRoleOf('account')) {
-            res.send({isLogin: true, username: req.user.username, nickname: req.user.nickname, email: req.user.email});
+            res.send({
+                success: true
+            });
         } else {
-            res.send({isLogin: false, username: null});
+            res.send({
+                success: false
+            });
         }
     });
 
