@@ -12,7 +12,7 @@ exports.mongodb = {
 
 // 项目信息
 exports.companyName = 'Geekboys.net, Inc.';
-exports.projectName = 'StudenBuy';
+exports.projectName = 'StudentBuy';
 exports.systemEmail = 'support@sunchaoran.com';
 exports.cryptoKey = 'yourCrytoKey';
 exports.loginAttempts = {

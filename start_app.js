@@ -98,6 +98,8 @@ require('./passport')(app, passport);
 //setup routes
 require('./routes')(app, passport);
 
+app.use(require('./views/error/error').http500);
+
 //setup utilities
 app.utility = {};
 app.utility.sendmail = require('./utils/sendmail/sendmail');
