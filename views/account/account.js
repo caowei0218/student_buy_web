@@ -29,7 +29,7 @@ exports.getAccountInfo = function (req, res) {
     workflow.emit('getAccountInfo');
 };
 
-exports.setUserAlias = function (req, res) {
+exports.setUserNickname = function (req, res) {
     var workflow = req.app.utility.workflow(req, res);
 
     if (!req.user) {
@@ -38,7 +38,7 @@ exports.setUserAlias = function (req, res) {
 
     var alias = req.body.alias;
     if (!alias) {
-        workflow.outcome.errfor.alias = '你的 Alias 不能为空。';
+        workflow.outcome.errfor.alias = '你的昵称不能为空。';
         return workflow.emit('response');
     }
 
@@ -63,7 +63,7 @@ exports.setUserAlias = function (req, res) {
     workflow.emit('setUserAlias');
 };
 
-exports.getUserAlias = function (req, res) {
+exports.getUserNickname = function (req, res) {
     var workflow = req.app.utility.workflow(req, res);
 
     if (!req.user) {
