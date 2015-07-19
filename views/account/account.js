@@ -12,11 +12,17 @@ exports.getAccountInfo = function (req, res) {
         email: req.user.email
     };
 
-    console.log(fieldsToSet);
     console.log(req.user);
 
+    var filter = {
+        password: 0,
+        isAdmin: 0,
+        roles: 0,
+        __v: 0
+    };
+
     workflow.on('getAccountInfo', function () {
-        req.app.db.models.User.findOne(fieldsToSet, function (err, userinfo) {
+        req.app.db.models.User.findOne(fieldsToSet, filter, function (err, userinfo) {
             if (err) {
                 return workflow.emit('exception', err);
             }
