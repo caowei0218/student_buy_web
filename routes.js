@@ -88,8 +88,11 @@ module.exports = function (app, passport) {
 
     app.post('/account/friend/add/', require('./views/account/friend').addFriend);
     app.get('/account/friend/list/', require('./views/account/friend').getFriendList);
+
     app.post('/account/info/alias/', require('./views/account/account').setUserAlias);
     app.get('/account/info/alias/', require('./views/account/account').getUserAlias);
+    app.get('/account/info/nickname/', require('./views/account/account').getUserAlias);
+    app.post('/account/info/nickname/', require('./views/account/account').setUserAlias);
 
     // route not found
     app.all('*', require('./views/error/error').http404);
