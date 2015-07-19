@@ -89,19 +89,19 @@ exports.addFriend = function (req, res) {
                 return workflow.emit('exception', err);
             }
 
-            var useridList = [];
+            var userMap = {};
 
-            friend.friendList.forEach(function (userinfo) {
-                useridList.push(userinfo._id);
+            friend.friendList.forEach(function (friend) {
+                userMap[friend._id] = friend;
             });
 
-            if (useridList.indexOf(friendUserinfo._id) > -1) {
+            if (userMap[friendUserinfo._id]) {
                 workflow.outcome.errors.push('该好友已经存在。');
                 return workflow.emit('response');
             }
 
             friend.friendList.push({
-                _id: friend._id
+                _id: friendUserinfo._id
             });
 
             req.app.db.models.Friend.findOneAndUpdate({
