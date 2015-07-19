@@ -18,8 +18,8 @@ exports.getFriendList = function (req, res) {
             }
 
             var friendMap = {};
-            friendInfo.friendList.forEach(function (friend) {
-                friendMap[friendInfo._id] = friend;
+            friendInfo.friendList.forEach(function (userId) {
+                friendMap[userId] = userId;
             });
 
             var filter = {
@@ -138,8 +138,8 @@ exports.addFriend = function (req, res) {
 
             var userMap = {};
 
-            friend.friendList.forEach(function (friendInfo) {
-                userMap[friendInfo._id] = friendInfo;
+            friend.friendList.forEach(function (userId) {
+                userMap[userId] = userId;
             });
 
             if (userMap[friendUserinfo._id]) {
