@@ -42,7 +42,7 @@ exports.getFriendList = function (req, res) {
                     }
                 });
 
-                workflow.outcome.userList = friendList;
+                workflow.outcome.friendList = friendList;
                 return workflow.emit('response');
             });
         });
