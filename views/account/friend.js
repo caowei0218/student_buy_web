@@ -6,14 +6,20 @@ exports.getFriendList = function (req, res) {
     workflow.on('getFriendList', function () {
         req.app.db.models.Friend.findOne({
             username: req.user.username
-        }, function (err, friend) {
+        }, function (err, friendInfo) {
             if (err) {
                 return workflow.emit('exception', err);
             }
 
+
+            if (!friendInfo) {
+                workflow.outcome.errors.push('该用户现在还没有好友。');
+                return workflow.emit('response');
+            }
+
             var friendMap = {};
-            friend.friendList.forEach(function (friend) {
-                friendMap[friend._id] = friend;
+            friendInfo.friendList.forEach(function (friend) {
+                friendMap[friendInfo._id] = friend;
             });
 
             var filter = {
@@ -55,7 +61,7 @@ exports.addFriend = function (req, res) {
 
     workflow.on('validate', function () {
         if (!friendUsername) {
-            workflow.outcome.errfor.friendUsername = '朋友的 Username 不能为空。';
+            workflow.outcome.errfor.friendUsername = '朋友的用户名不能为空。';
         }
 
         if (workflow.hasErrors()) {
@@ -131,8 +137,8 @@ exports.addFriend = function (req, res) {
 
             var userMap = {};
 
-            friend.friendList.forEach(function (friend) {
-                userMap[friend._id] = friend;
+            friend.friendList.forEach(function (friendInfo) {
+                userMap[friendInfo._id] = friendInfo;
             });
 
             if (userMap[friendUserinfo._id]) {
@@ -155,6 +161,101 @@ exports.addFriend = function (req, res) {
 
                 return workflow.emit('response');
             });
+        });
+    });
+
+    workflow.emit('validate');
+};
+
+exports.deleteFriend = function (req, res) {
+
+    var workflow = req.app.utility.workflow(req, res);
+
+    var friendUsername = req.body.friendUsername;
+
+    workflow.on('validate', function () {
+        if (!friendUsername) {
+            workflow.outcome.errfor.friendUsername = '朋友的用户名不能为空。';
+        }
+
+        if (workflow.hasErrors()) {
+            return workflow.emit('response');
+        }
+
+        workflow.emit('checkInFriendCollection');
+    });
+
+    workflow.on('checkInFriendCollection', function () {
+        req.app.db.models.Friend.findOne({
+            username: req.user.username
+        }, function (err, friendInfo) {
+            if (err) {
+                return workflow.emit('exception', err);
+            }
+
+            if (!friendInfo) {
+                workflow.outcome.errors.push('该用户现在还没有好友。');
+                return workflow.emit('response');
+            }
+
+            workflow.emit('findUserId');
+        });
+    });
+
+    workflow.on('findUserId', function () {
+        req.app.db.models.User.findOne({
+            username: friendUsername
+        }, function (err, userinfo) {
+            if (err) {
+                return workflow.emit('exception', err);
+            }
+
+            if (!userinfo) {
+                workflow.outcome.errors.push('要删除的好友不存在。');
+                return workflow.emit('response');
+            }
+
+            workflow.emit('deleteFriend', userinfo._id);
+        });
+    });
+
+    workflow.on('deleteFriend', function (_id) {
+        req.app.db.models.Friend.findOne({
+            username: req.user.username
+        }, function (err, friend) {
+            if (err) {
+                return workflow.emit('exception', err);
+            }
+
+            for (var index = 0; index < friend.friendList.length; index++) {
+                var friendInfo = friend.friendList[index];
+                if (friendInfo._id.toString() === _id.toString()) {
+                    friend.friendList.splice(index, 1);
+                    break;
+                }
+            }
+
+            if (friend.friendList.length == 0) {
+                friend.remove(function (err, friendInfo) {
+                    if (err) {
+                        return workflow.emit('exception', err);
+                    }
+                    return workflow.emit('response');
+                });
+            } else {
+                req.app.db.models.Friend.findOneAndUpdate({
+                    username: req.user.username
+                }, {
+                    friendList: friend.friendList
+                }, function (err, friendInfo) {
+                    if (err) {
+                        return workflow.emit('exception', err);
+                    }
+
+                    return workflow.emit('response');
+                });
+            }
+
         });
     });
 

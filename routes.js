@@ -88,6 +88,7 @@ module.exports = function (app, passport) {
 
     app.post('/account/friend/', require('./views/account/friend').addFriend);
     app.get('/account/friend/list/', require('./views/account/friend').getFriendList);
+    app.delete('/account/friend/', require('./views/account/friend').deleteFriend);
 
     app.get('/account/info/nickname/', require('./views/account/account').getUserNickname);
     app.post('/account/info/nickname/', require('./views/account/account').setUserNickname);

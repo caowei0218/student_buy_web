@@ -4,7 +4,10 @@ module.exports = function (app, mongoose) {
     var friendSchema = new mongoose.Schema({
         username: {type: String, unique: true},
         nickname: {type: String, unique: true},
-        friendList: []
+        friendList: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }]
     });
 
     friendSchema.index({username: 1}, {unique: true});
