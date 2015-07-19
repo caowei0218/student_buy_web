@@ -9,23 +9,13 @@ exports.addFriend = function (req, res) {
 
     var workflow = req.app.utility.workflow(req, res);
 
-    var friendUsername = req.body.friendUsername,
-        friendAlias = req.body.friendAlias,
-        alias = req.body.alias;
+    var friendUsername = req.body.friendUsername;
 
     var friendUserinfo = null;
 
     workflow.on('validate', function () {
         if (!friendUsername) {
             workflow.outcome.errfor.friendUsername = '朋友的 Username 不能为空。';
-        }
-
-        if (!friendAlias) {
-            workflow.outcome.errfor.friendAlias = '朋友的 Alias 不能为空。';
-        }
-
-        if (!alias) {
-            workflow.outcome.errfor.alias = '你的 Alias 不能为空。';
         }
 
         if (workflow.hasErrors()) {
@@ -39,8 +29,7 @@ exports.addFriend = function (req, res) {
 
         workflow.on('checkInUserCollection', function () {
             req.app.db.models.User.findOne({
-                username: friendUsername,
-                nickname: friendAlias
+                username: friendUsername
             }, function (err, userinfo) {
                 if (err) {
                     return workflow.emit('exception', err);
@@ -82,7 +71,6 @@ exports.addFriend = function (req, res) {
     workflow.on('createUserToFriend', function () {
         req.app.db.models.Friend.create({
             username: req.user.username,
-            nickname: alias,
             friendList: []
         }, function (err) {
             if (err) {
@@ -112,10 +100,14 @@ exports.addFriend = function (req, res) {
                 return workflow.emit('response');
             }
 
-            req.app.db.models.Friend.findOneAndUpdate(friend, {
-                friendList: friend.friendList.push({
-                    _id: friend._id
-                })
+            friend.friendList.push({
+                _id: friend._id
+            });
+
+            req.app.db.models.Friend.findOneAndUpdate({
+                username: req.user.username
+            }, {
+                friendList: friend.friendList
             }, function (err) {
                 if (err) {
                     return workflow.emit('exception', err);
