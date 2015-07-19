@@ -2,16 +2,50 @@
 
 exports.getFriendList = function (req, res) {
     var workflow = req.app.utility.workflow(req, res);
-    return workflow.emit('response');
+
+    workflow.on('getFriendList', function () {
+        req.app.db.models.Friend.findOne({
+            username: req.user.username
+        }, function (err, friend) {
+            if (err) {
+                return workflow.emit('exception', err);
+            }
+
+            var friendMap = {};
+            friend.friendList.forEach(function (friend) {
+                friendMap[friend._id] = friend;
+            });
+
+            req.app.db.models.User.find({
+            }, function (err, userList) {
+                if (err) {
+                    return workflow.emit('exception', err);
+                }
+
+                var friendList = [];
+
+                userList.forEach(function (userinfo) {
+                    if (friendMap[userinfo._id]) {
+                        friendList.push(userinfo);
+                    }
+                });
+
+                workflow.outcome.userList = friendList;
+                return workflow.emit('response');
+            });
+        });
+    });
+
+
+    return workflow.emit('getFriendList');
 };
 
 exports.addFriend = function (req, res) {
 
     var workflow = req.app.utility.workflow(req, res);
 
-    var friendUsername = req.body.friendUsername;
-
-    var friendUserinfo = null;
+    var friendUsername = req.body.friendUsername,
+        friendUserinfo = null;
 
     workflow.on('validate', function () {
         if (!friendUsername) {
