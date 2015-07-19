@@ -71,8 +71,6 @@ app.use(passport.session());
 //app.use(csrf({cookie: {signed: true}}));
 helmet(app);
 
-//require('./middleware/systemLog')(app);
-
 //response locals
 app.use(function (req, res, next) {
     //res.cookie('_csrfToken', req.csrfToken());

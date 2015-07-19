@@ -117,6 +117,7 @@ exports.addFriend = function (req, res) {
     workflow.on('createUserToFriend', function () {
         req.app.db.models.Friend.create({
             username: req.user.username,
+            nickname: req.user.nickname,
             friendList: []
         }, function (err) {
             if (err) {
