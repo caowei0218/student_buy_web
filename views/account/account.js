@@ -18,7 +18,9 @@ exports.getAccountInfo = function (req, res) {
         password: 0,
         isAdmin: 0,
         roles: 0,
-        __v: 0
+        __v: 0,
+        resetPasswordToken: 0,
+        resetPasswordExpires: 0
     };
 
     workflow.on('getAccountInfo', function () {
