@@ -16,8 +16,14 @@ exports.getFriendList = function (req, res) {
                 friendMap[friend._id] = friend;
             });
 
-            req.app.db.models.User.find({
-            }, function (err, userList) {
+            var filter = {
+                password: 0,
+                isAdmin: 0,
+                roles: 0,
+                __v: 0
+            };
+
+            req.app.db.models.User.find({}, filter, function (err, userList) {
                 if (err) {
                     return workflow.emit('exception', err);
                 }
