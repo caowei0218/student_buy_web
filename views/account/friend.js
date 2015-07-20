@@ -111,7 +111,7 @@ exports.getFriendInfo = function (req, res) {
 
             var isYourFriend = false;
 
-            friendInfo.friendList.forEach(function (friend) {
+            friendInfo && friendInfo.friendList.forEach(function (friend) {
                 if (friend._id.toString() == userinfo._id.toString()) {
                     isYourFriend = true;
                     workflow.outcome.friendinfo = userinfo;
