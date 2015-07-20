@@ -5,8 +5,13 @@ module.exports = function (app, mongoose) {
         username: {type: String, unique: true},
         nickname: {type: String, unique: true},
         friendList: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
+            _id: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User'
+            },
+            alias: {
+                type: String, default: ''
+            }
         }]
     });
 

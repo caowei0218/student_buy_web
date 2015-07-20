@@ -60,6 +60,7 @@ module.exports = function (app, passport) {
 
     // Home
     app.get('/', require('./views/home').index);
+    app.get('/status/', require('./views/home').index);
 
     // Login 用户登录
     app.post('/login/', require('./views/account/login').login);
@@ -85,13 +86,16 @@ module.exports = function (app, passport) {
     app.get('/account/verification/:token/', require('./views/account/verification').verify);
 
     app.get('/account/info/', require('./views/account/account').getAccountInfo);
-
-    app.post('/account/friend/', require('./views/account/friend').addFriend);
-    app.get('/account/friend/list/', require('./views/account/friend').getFriendList);
-    app.delete('/account/friend/', require('./views/account/friend').deleteFriend);
-
+    app.post('/account/info/', require('./views/account/account').updateAccountInfo);
     app.get('/account/info/nickname/', require('./views/account/account').getUserNickname);
     app.post('/account/info/nickname/', require('./views/account/account').setUserNickname);
+
+    // 好友相关
+    app.get('/account/friend/:name/', require('./views/account/friend').getFriendInfo);
+    app.post('/account/friend/', require('./views/account/friend').addFriend);
+    app.post('/account/friend/alias/', require('./views/account/friend').setFriendAlias);
+    app.get('/account/friend/list/', require('./views/account/friend').getFriendList);
+    app.delete('/account/friend/', require('./views/account/friend').deleteFriend);
 
     // route not found
     app.all('*', require('./views/error/error').http404);
