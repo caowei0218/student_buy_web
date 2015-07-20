@@ -56,9 +56,8 @@ exports.getFriendList = function (req, res) {
 
 // OK
 exports.getFriendInfo = function (req, res) {
-    var workflow = req.app.utility.workflow(req, res);
-
-    var friendUsername = req.params.name;
+    var workflow = req.app.utility.workflow(req, res),
+        friendUsername = req.query.friendUsername;
 
     workflow.on('validate', function () {
         if (!friendUsername) {

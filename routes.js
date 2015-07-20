@@ -91,7 +91,7 @@ module.exports = function (app, passport) {
     app.post('/account/info/nickname/', require('./views/account/account').setUserNickname);
 
     // 好友相关
-    app.get('/account/friend/:name/', require('./views/account/friend').getFriendInfo);
+    app.get('/account/friend/', require('./views/account/friend').getFriendInfo);
     app.post('/account/friend/', require('./views/account/friend').addFriend);
     app.post('/account/friend/alias/', require('./views/account/friend').setFriendAlias);
     app.get('/account/friend/list/', require('./views/account/friend').getFriendList);
