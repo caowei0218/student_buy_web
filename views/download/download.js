@@ -27,9 +27,8 @@ function getYaml(url, callback) {
     });
 }
 
-function getDownloadLink(yaml) {
-    var downloadLink = '',
-        files = [];
+function getDownloadObject(yaml) {
+    var files = [];
 
     var path = null;
     yaml.forEach(function (object) {
@@ -39,21 +38,23 @@ function getDownloadLink(yaml) {
         }
     });
 
-    var maxVersion = 0,
+    // 比较版本，找出最新版本
+    var maxVersion = [0, 0, 0],
         latestFile = null;
     for (var index = 0; index < files.length; index++) {
-        var file = files[index];
-        if (file.version > maxVersion) {
-            maxVersion = file.version;
+        var file = files[index],
+            version = file.version.split('.');
+        if (version[0] > maxVersion[0] || version[1] > maxVersion[1] || version[2] > maxVersion[2]) {
+            maxVersion = version;
             latestFile = file;
         }
     }
 
     if (latestFile) {
-        downloadLink = path + latestFile.name + '?raw=true';
+        file.downloadLink = path + latestFile.name + '?raw=true';
     }
 
-    return downloadLink;
+    return file;
 }
 
 exports.getLatestAndroid = function (req, res) {
@@ -69,7 +70,10 @@ exports.getLatestAndroid = function (req, res) {
             return workflow.emit('response');
         }
 
-        workflow.outcome.downloadLink = getDownloadLink(yaml);
+        var downloadObject = getDownloadObject(yaml);
+
+        workflow.outcome.version = downloadObject.version;
+        workflow.outcome.downloadLink = downloadObject.downloadLink;
         return workflow.emit('response');
     });
 };
