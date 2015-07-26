@@ -97,6 +97,9 @@ module.exports = function (app, passport) {
     app.get('/account/friend/list/', require('./views/account/friend').getFriendList);
     app.delete('/account/friend/', require('./views/account/friend').deleteFriend);
 
+    // 下载
+    app.get('/download/release/android/', require('./views/download/download').getLatestAndroid);
+
     // route not found
     app.all('*', require('./views/error/error').http404);
 };
