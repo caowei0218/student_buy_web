@@ -81,7 +81,9 @@ exports.getFriendInfo = function (req, res) {
             password: 0,
             isAdmin: 0,
             roles: 0,
-            __v: 0
+            __v: 0,
+            resetPasswordToken: 0,
+            resetPasswordExpires: 0
         };
 
         req.app.db.models.User.findOne({
@@ -351,6 +353,10 @@ exports.setFriendAlias = function (req, res) {
     workflow.on('validate', function () {
         if (!friendUsername) {
             workflow.outcome.errfor.friendUsername = '朋友的用户名不能为空。';
+        }
+
+        if (!friendAlias) {
+            workflow.outcome.errfor.friendAlias = '朋友的昵称不能为空。';
         }
 
         if (workflow.hasErrors()) {
