@@ -51,7 +51,7 @@ function getDownloadObject(yaml) {
         } else if (version[0] == maxVersion[0] && version[1] > maxVersion[1]) {
             maxVersion = version;
             latestFile = file;
-        } else if (version[0] >= maxVersion[0] && version[1] >= maxVersion[1] && version[2] >= maxVersion[2]) {
+        } else if (version[0] == maxVersion[0] && version[1] == maxVersion[1] && version[2] > maxVersion[2]) {
             maxVersion = version;
             latestFile = file;
         }
