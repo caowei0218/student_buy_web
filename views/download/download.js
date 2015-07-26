@@ -44,7 +44,14 @@ function getDownloadObject(yaml) {
     for (var index = 0; index < files.length; index++) {
         var file = files[index],
             version = file.version.split('.');
-        if (version[0] > maxVersion[0] || version[1] > maxVersion[1] || version[2] > maxVersion[2]) {
+
+        if (version[0] > maxVersion[0]) {
+            maxVersion = version;
+            latestFile = file;
+        } else if (version[0] == maxVersion[0] && version[1] > maxVersion[1]) {
+            maxVersion = version;
+            latestFile = file;
+        } else if (version[0] >= maxVersion[0] && version[1] >= maxVersion[1] && version[2] >= maxVersion[2]) {
             maxVersion = version;
             latestFile = file;
         }
