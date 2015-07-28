@@ -80,6 +80,7 @@ exports.getLatestAndroid = function (req, res) {
         var downloadObject = getDownloadObject(yaml);
 
         workflow.outcome.version = downloadObject.version;
+        workflow.outcome.fileName = downloadObject.name;
         workflow.outcome.downloadLink = downloadObject.downloadLink;
         return workflow.emit('response');
     });
