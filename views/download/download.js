@@ -45,6 +45,8 @@ function getDownloadObject(yaml) {
         var file = files[index],
             version = file.version.split('.');
 
+        version = parseArrayToInt(version);
+
         if (version[0] > maxVersion[0]) {
             maxVersion = version;
             latestFile = file;
@@ -62,6 +64,14 @@ function getDownloadObject(yaml) {
     }
 
     return file;
+}
+
+function parseArrayToInt(array) {
+    for (var index = 0; index < array.length; index++) {
+        array[index] = parseInt(array[index], 10);
+    }
+
+    return array;
 }
 
 exports.getLatestAndroid = function (req, res) {
